@@ -12,6 +12,95 @@
         <input type="hidden" id="demandId" value="">
         
         <label>
+            Wine Name:
+            <input type="text" id="wineName" required placeholder="Enter wine name" />
+        </label>
+        <br><br>
+        
+        <label>
+            Wine Type:
+            <select id="wineType" required>
+                <option value="Red">Red</option>
+                <option value="White">White</option>
+                <option value="Rosé">Rosé</option>  <!-- Rosé with accent -->
+                <option value="Sparkling">Sparkling</option>
+                <option value="Dessert">Dessert</option>  <!-- New Dessert option -->
+            </select>
+        </label>
+        <br><br>
+        
+        <label>
+            Preferred Price:
+            <input type="number" id="preferredPrice" required min="0" step="0.01" placeholder="Enter price" />
+        </label>
+        <br><br>
+        
+        <label>
+            Quantity:
+            <input type="number" id="quantity" required min="1" />
+        </label>
+        <br><br>
+        
+        <button type="submit">Submit Request</button>
+    </form>
+
+    <script>
+    // Listen for form submission
+    document.getElementById('wineDemandForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Collect form data
+        const formData = {
+            wineName: document.getElementById('wineName').value,
+            wineType: document.getElementById('wineType').value,
+            preferredPrice: document.getElementById('preferredPrice').value,
+            quantity: document.getElementById('quantity').value
+        };
+
+        // Send the data to API Gateway
+        fetch('https://gr9i9pvvu4.execute-api.eu-north-1.amazonaws.com/test/InputForm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData) // Convert the form data to JSON
+        })
+        .then(response => response.json()) // Parse the response as JSON
+        .then(data => {
+            console.log('Success:', data); // Log success response from Lambda
+            alert('Request submitted successfully!');
+        })
+        .catch((error) => {
+            console.error('Error:', error); // Log errors
+            alert('There was an error submitting your request.');
+        });
+    });
+
+    // Validate the Wine Name field to allow only letters and spaces
+    document.getElementById("wineName").addEventListener("input", function(event) {
+        const wineName = event.target.value;
+        if (/[^A-Za-z\s]/.test(wineName)) {
+            alert("Wine Name can only contain letters and spaces.");
+            event.target.value = wineName.replace(/[^A-Za-z\s]/g, '');  // Remove any invalid characters
+        }
+    });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Demand Form</title>
+</head>
+<body>
+    <h1>Wine Demand Form</h1>
+    
+    <form id="wineDemandForm">
+        <input type="hidden" id="demandId" value="">
+        
+        <label>
             Restaurant ID:
             <input type="text" id="restaurantId" required="">
         </label>
